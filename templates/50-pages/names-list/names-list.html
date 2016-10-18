@@ -1,0 +1,11 @@
+<script class="tpl-script" id="names-list-tpl" type="text/x-handlebars-template">
+	<div id="names-list">
+		<h1>Sélectionnez votre nom dans la liste ci-dessous</h1>
+		<input id="names-list-filter" type="text" placeholder="Filtre" />
+		<ul>
+		{{#names}}
+			<li class="student-{{id}}" data-id="{{id}}">{{name}}</li>
+		{{/names}}
+		</ul>
+	</div>
+</script>
