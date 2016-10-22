@@ -226,8 +226,10 @@ function loadIo() {
 			
 			client.emit('youare', id);
 			
-			if(pq.state == STATES.solve)
+			if(pq.state == STATES.solve) {
+				computeStudentMark(id);
 				client.emit('solution', pq.opts.quizz, pq.studentData[id].form);
+			}
 			else if(pq.studentData[id].mark !== undefined)
 				client.emit('mark', pq.studentData[id].mark, pq.opts.quizz.markBase);
 			else
@@ -258,28 +260,8 @@ function loadIo() {
 			
 			pq.studentData[id].form = data;
 			
-			var points = 0;
-			var quizzq = pq.opts.quizz.questions;
-			for(var i = 0 ; i < quizzq.length ; i++) {
-				var curq = quizzq[i];
-				var good = 0;
-				
-				for(var j = 0 ; j < curq.choices.length ; j++) {
-					if(curq.choices[j].ok == objGet(data, ['q' + i, 'q' + i + 'c' + j], false)) {
-						good++;
-					}
-				}
-				
-				if(curq.choices.length == good)
-					points++;
-			}
-			
-			var mark = points / quizzq.length;
-			mark *= pq.opts.quizz.markBase * 10;
-			mark |= 0;
-			mark /= 10;
-			
-			pq.studentData[id].mark = mark;
+			computeStudentMark(id);
+			var mark = pq.studentData[id].mark;
 			
 			var timeLeft = pq.opts.quizz.duration - (Date.now() - pq.studentData[id].start);
 			timeLeft /= 1000;
@@ -333,6 +315,44 @@ function loadIo() {
 			client.emit('showList');
 		}
 	});
+}
+
+function computeStudentMark(id) {
+	if(!pq.studentData.hasOwnProperty(id))
+		return(false);
+	
+	if(pq.studentData[id].mark !== undefined)
+		return(false);
+	
+	if(!pq.studentData[id].form)
+		return(false);
+	
+	var studentResponses = pq.studentData[id].form;
+	
+	var points = 0;
+	var quizzq = pq.opts.quizz.questions;
+	for(var i = 0 ; i < quizzq.length ; i++) {
+		var curq = quizzq[i];
+		var good = 0;
+		
+		for(var j = 0 ; j < curq.choices.length ; j++) {
+			if(curq.choices[j].ok == objGet(studentResponses, ['q' + i, 'q' + i + 'c' + j], false)) {
+				good++;
+			}
+		}
+		
+		if(curq.choices.length == good)
+			points++;
+	}
+	
+	var mark = points / quizzq.length;
+	mark *= pq.opts.quizz.markBase * 10;
+	mark |= 0;
+	mark /= 10;
+	
+	pq.studentData[id].mark = mark;
+	
+	return(true);
 }
 
 function loadLogs() {
@@ -470,8 +490,17 @@ function loadShell() {
 			pq.state = STATES.solve;
 			for(var id in pq.studentData) {
 				var cur = pq.studentData[id];
-				if(cur.client)
+				if(cur.client) {
+					if(computeStudentMark(id)) {
+						var timeLeft = pq.opts.quizz.duration - (Date.now() - cur.start);
+						timeLeft /= 1000;
+						timeLeft |= 0;
+						var timeLeftStr = ((timeLeft / 60) | 0) + ':' + (timeLeft % 60);
+						
+						pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") was forced to terminate quizz (correction) with mark " + cur.mark + " with " + timeLeftStr + " minutes left")
+					}
 					cur.client.emit('solution', pq.opts.quizz, cur.form);
+				}
 			}
 			resetPrompt();
 			console.log('Quizz solved!');
@@ -482,6 +511,29 @@ function loadShell() {
 		else {
 			console.log('Quizz not started, start it before correcting!');
 		}
+	};
+	
+	cmds.summary = cmds.recap = cmds.sumup = cmds.state = function() {
+		var cnts = {
+			idle: 0,
+			quizz: 0,
+			mark: 0,
+		};
+		
+		for(var id = 0 ; id < pq.opts.students.length ; id++) {
+			if(!pq.studentData.hasOwnProperty(id))
+				cnts.idle++;
+			else if(pq.studentData[id].mark !== undefined)
+				cnts.mark++;
+			else if(pq.studentData[id].ip !== undefined)
+				cnts.quizz++;
+			else
+				cnts.idle++;
+		}
+		
+		console.log(padString(cnts.idle, 3, ' ') + ' students did not start the test');
+		console.log(padString(cnts.quizz, 3, ' ') + ' students started the test');
+		console.log(padString(cnts.mark, 3, ' ') + ' students ended the test');
 	};
 	
 	cmds.grep = cmds.find = cmds.search = cmds.list = cmds.l = function(studMatch) {
