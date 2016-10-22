@@ -157,7 +157,7 @@ function filterQuizz(quizz) {
 	for(var i = 0 ; i < ret.questions.length ; i++) {
 		var curq = ret.questions[i];
 		for(var j = 0 ; j < curq.choices.length ; j++) {
-			delete curq.choices[i].ok;
+			delete curq.choices[j].ok;
 		}
 	}
 	
@@ -283,7 +283,7 @@ function loadIo() {
 				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") came back");
 		});
 		
-		if(pq.state == STATES.init)
+		if(pq.state == STATES.idle)
 			return;
 		
 		client.emit('init', pq.opts.students, pq.opts.pubQuizz);
@@ -404,17 +404,17 @@ function loadLogs() {
 }
 
 function loadRoutes() {
-	pq.app.use('/static', express.static('static'));
-	pq.app.use('/jquery', express.static('node_modules/jquery/dist/'));
-	pq.app.use('/handlebars', express.static('node_modules/handlebars/dist'));
-	pq.app.use('/showdown', express.static('node_modules/showdown/dist'));
+	pq.app.use('/static', express.static(path.join(__dirname, 'static')));
+	pq.app.use('/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist/')));
+	pq.app.use('/handlebars', express.static(path.join(__dirname, 'node_modules/handlebars/dist')));
+	pq.app.use('/showdown', express.static(path.join(__dirname, 'node_modules/showdown/dist')));
 	
 	pq.app.get('/', function(req, res) {
 		pq.log.access("Access from " + req.client.remoteAddress);
-		var fileStream = fs.createReadStream(path.join('.', 'static', 'main.html'));
+		var fileStream = fs.createReadStream(path.join(__dirname, 'static', 'main.html'));
 		fileStream.pipe(res);
 		fileStream.on('error', function() {
-			req.abort();
+			res.end();
 		});
 	});
 }
