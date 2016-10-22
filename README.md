@@ -45,6 +45,7 @@ Here are the available options of `pop-quizz` :
 
 - `?` `h` `help` (0 arguments) Shows the list of all commands.
 - `go` `r` `run` `start` (0 arguments) Start the quizz. On startup, it is not started by default, so that the teacher can wait for everyone to be ready.
+- `solution` `solve` `correct` (0 arguments) Solve the quizz, show it to each student and their associated good/bad responses.
 - `search` `find` `grep` `list` `l` (1 argument, optionnal) Search a student by name or ID. Searching for `*` shows everyone. When not given, it defaults to `*`. It will also show the current mark, remaining time, and IP address.
 - `disconnect` `kill` `reset` (1 argument) Delete a student data (if he clicked on an other name for example). He will have to refresh his page to see the changes, however.
 - `timeadd` `addtime` (2 arguments) Add time for a student. The first parameter is the name or ID of the student (like `search`) and the second is the number of minutes to add. Negative numbers are allowed here.

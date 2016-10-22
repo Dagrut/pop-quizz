@@ -6,6 +6,12 @@ const express = require('express');
 const winston = require('winston');
 const mkdirp = require('mkdirp');
 
+const STATES = {
+	idle: 'idle',
+	quizz: 'quizz',
+	solve: 'solve',
+}
+
 function objGet(obj, path, dft) {
 	if(!(path instanceof Array))
 		path = path.split('.');
@@ -102,7 +108,8 @@ function loadArguments() {
 		process.exit(1);
 	}
 	
-	pq.isStarted = runNow;
+	if(runNow)
+		pq.state = STATES.quizz;
 	
 	port = parseInt(port);
 	if(port < 1 || port > 65535)
@@ -187,7 +194,7 @@ function loadIo() {
 		});
 		
 		client.on('iam', function(id) {
-			if(!pq.isStarted)
+			if(pq.state == STATES.idle)
 				return;
 			
 			if(!pq.opts.students.hasOwnProperty(id)) {
@@ -219,14 +226,16 @@ function loadIo() {
 			
 			client.emit('youare', id);
 			
-			if(pq.studentData[id].mark !== undefined)
+			if(pq.state == STATES.solve)
+				client.emit('solution', pq.opts.quizz, pq.studentData[id].form);
+			else if(pq.studentData[id].mark !== undefined)
 				client.emit('mark', pq.studentData[id].mark, pq.opts.quizz.markBase);
 			else
 				client.emit('quizz', pq.studentData[id].form, pq.opts.quizz.duration / 1000);
 		});
 		
 		client.on('quizz-save', function(data) {
-			if(!pq.isStarted)
+			if(pq.state != STATES.quizz)
 				return;
 			
 			var id = pq.ioStudents[clientUid];
@@ -237,7 +246,7 @@ function loadIo() {
 		});
 		
 		client.on('quizz-end', function(data) {
-			if(!pq.isStarted)
+			if(pq.state != STATES.quizz)
 				return;
 			
 			var id = pq.ioStudents[clientUid];
@@ -246,6 +255,8 @@ function loadIo() {
 			
 			if(pq.studentData[id].mark !== undefined)
 				return(client.emit('mark', mark, pq.opts.quizz.markBase));
+			
+			pq.studentData[id].form = data;
 			
 			var points = 0;
 			var quizzq = pq.opts.quizz.questions;
@@ -290,7 +301,7 @@ function loadIo() {
 				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") came back");
 		});
 		
-		if(!pq.isStarted)
+		if(pq.state == STATES.init)
 			return;
 		
 		client.emit('init', pq.opts.students, pq.opts.pubQuizz);
@@ -310,7 +321,10 @@ function loadIo() {
 			var timeLeft = pq.opts.quizz.duration - (Date.now() - pq.studentData[id].start);
 			timeLeft /= 1000;
 			timeLeft |= 0;
-			if(pq.studentData[id].mark !== undefined)
+			
+			if(pq.state == STATES.solve)
+				client.emit('solution', pq.opts.quizz, pq.studentData[id].form);
+			else if(pq.studentData[id].mark !== undefined)
 				client.emit('mark', pq.studentData[id].mark, pq.opts.quizz.markBase);
 			else
 				client.emit('quizz', pq.studentData[id].form, timeLeft);
@@ -390,8 +404,6 @@ function loadShell() {
 		output: process.stdout,
 	});
 	
-	rl.setPrompt('pop-quizz> ');
-	
 	function searchStudent(nameOrId, respCb) {
 		var id = parseInt(nameOrId);
 		
@@ -437,14 +449,37 @@ function loadShell() {
 	};
 	
 	cmds.start = cmds.run = cmds.r = cmds.go = function() {
-		if(!pq.isStarted) {
-			pq.isStarted = true;
+		if(pq.state == STATES.idle) {
+			pq.state = STATES.quizz;
 			pq.io.emit('init', pq.opts.students, pq.opts.pubQuizz);
 			pq.io.emit('showList');
 			console.log('Quizz started!');
+			resetPrompt();
+		}
+		else if(pq.state == STATES.solve) {
+			console.log('Quizz is being solved!');
 		}
 		else {
 			console.log('Quizz already started!');
+		}
+	};
+	
+	cmds.correct = cmds.solve = cmds.solution = function() {
+		if(pq.state == STATES.quizz) {
+			pq.state = STATES.solve;
+			for(var id in pq.studentData) {
+				var cur = pq.studentData[id];
+				if(cur.client)
+					cur.client.emit('solution', pq.opts.quizz, cur.form);
+			}
+			resetPrompt();
+			console.log('Quizz solved!');
+		}
+		else if(pq.state == STATES.solve) {
+			console.log('Quizz already being solved!');
+		}
+		else {
+			console.log('Quizz not started, start it before correcting!');
 		}
 	};
 	
@@ -585,6 +620,16 @@ function loadShell() {
 		rl.prompt();
 	}
 	
+	function resetPrompt() {
+		if(pq.state == STATES.idle)
+			rl.setPrompt('pop-quizz/idle> ');
+		else if(pq.state == STATES.quizz)
+			rl.setPrompt('pop-quizz/quizz> ');
+		else if(pq.state == STATES.solve)
+			rl.setPrompt('pop-quizz/solve> ');
+	}
+	resetPrompt();
+	
 	rl.prompt();
 	
 	rl.on('line', onQuery);
@@ -592,7 +637,7 @@ function loadShell() {
 
 function main() {
 	global.pq = {};
-	
+	pq.state = STATES.idle;
 	pq.opts = loadArguments();
 	
 	pq.app = express();

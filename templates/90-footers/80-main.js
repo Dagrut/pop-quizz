@@ -84,6 +84,38 @@ $(function() {
 		Handlebars.unregisterHelper('isChecked');
 	});
 	
+	socket.on('solution', function(okQuizz, form) {
+		Handlebars.registerHelper('isGood', function(qid, cid, isok) {
+			var ret = '';
+			qid = 'q' + qid;
+			cid = qid + 'c' + cid;
+			var isChecked = objGet(form, [qid, cid], false);
+			
+			if(isChecked != isok)
+				return('bad-response');
+			else
+				return('good-response');
+		});
+		
+		Handlebars.registerHelper('isChecked', function(qid, cid, isok) {
+			qid = 'q' + qid;
+			cid = qid + 'c' + cid;
+			var isChecked = objGet(form, [qid, cid], false);
+			if(isChecked)
+				return('checked');
+			return('');
+		});
+		
+		renderTemplate('solution', {
+			title: okQuizz.title,
+			student: students[currentStudent],
+			questions: okQuizz.questions,
+		});
+		
+		Handlebars.unregisterHelper('isGood');
+		Handlebars.unregisterHelper('isChecked');
+	});
+	
 	$window = $(window);
 	$window.blur(function() {
 		socket.emit('blur');
