@@ -5,10 +5,9 @@ exp.markBase = 20; // The note will be on 20
 exp.duration = 30; // In minutes
 exp.questions = [
 	{
-		raw: true,
-		title: "Is this question using <code>&lt;html&gt;</code> characters?",
+		title: "Is this question using `<html>` characters?",
 		choices: [
-			{ ok: true,  text: "<code>yes</code>", raw: true },
+			{ ok: true,  text: "<code>yes</code>" },
 			{ ok: false, text: "Nope" },
 		],
 	},

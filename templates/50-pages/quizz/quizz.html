@@ -1,26 +1,18 @@
 <script class="tpl-script" id="quizz-tpl" type="text/x-handlebars-template">
 	<form id="quizz">
 		<div id="quizz-timer">Loading...</div>
-		<h1>{{title}}</h1>
+		<h1>{{fmt title}}</h1>
 		<h3>Étudiant: {{student}}</h3>
 		<h4>Questions :</h4>
 		<ul>
 		{{#questions}}
 			<li>
-				{{#if raw}}
-					{{{title}}}
-				{{else}}
-					{{title}}
-				{{/if}}
+				{{{fmt title}}}
 				<br>
 				{{#choices}}
 					<label>
 						<input type="checkbox" name="q{{qid}}" value="q{{qid}}c{{cid}}" {{#isChecked qid cid}}checked{{/isChecked}} />
-						{{#if raw}}
-							{{{text}}}
-						{{else}}
-							{{text}}
-						{{/if}}
+						{{{fmt text}}}
 						<br>
 					</label>
 				{{/choices}}

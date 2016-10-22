@@ -55,6 +55,8 @@ Here are the available options of `pop-quizz` :
 
 You should look at the files inside the `demo` directory to see some examples of files.
 
+Each question and response will be displayed through a markdown renderer, so you can use the markdown syntax here.
+
 ##Notes about the behavior of pop-quizz
 
 When you select a student name, the IP address is linked to this student, so when reloading the page, it will directly show the quizz, and not the students list anymore. Also if this student finished the quizz, it will show its mark.

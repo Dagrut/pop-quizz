@@ -387,6 +387,7 @@ function loadRoutes() {
 	pq.app.use('/static', express.static('static'));
 	pq.app.use('/jquery', express.static('node_modules/jquery/dist/'));
 	pq.app.use('/handlebars', express.static('node_modules/handlebars/dist'));
+	pq.app.use('/showdown', express.static('node_modules/showdown/dist'));
 	
 	pq.app.get('/', function(req, res) {
 		pq.log.access("Access from " + req.client.remoteAddress);

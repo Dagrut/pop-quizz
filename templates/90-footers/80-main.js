@@ -6,6 +6,11 @@ $(function() {
 		templates[id] = Handlebars.compile(tpl.html());
 	}
 	
+	var showdownCnv = new showdown.Converter();
+	Handlebars.registerHelper('fmt', function(text) {
+		return(showdownCnv.makeHtml(text).replace(/^<p>|<\/p>$/g, ''));
+	});
+	
 	renderTemplate('loading');
 	
 	socket = io();

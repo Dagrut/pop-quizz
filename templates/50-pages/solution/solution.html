@@ -1,26 +1,18 @@
 <script class="tpl-script" id="solution-tpl" type="text/x-handlebars-template">
 	<div id="solution">
-		<h1>{{title}}</h1>
+		<h1>{{fmt title}}</h1>
 		<h3>Étudiant: {{student}}</h3>
 		<h4>Correction :</h4>
 		<ul>
 		{{#questions}}
 			<li>
-				{{#if raw}}
-					{{{title}}}
-				{{else}}
-					{{title}}
-				{{/if}}
+				{{{fmt title}}}
 				<br>
 				{{#choices}}
 					<label>
 						<span class="goodbad {{isGood qid cid ok}}">&nbsp;</span>
 						<input type="checkbox" name="q{{qid}}" value="q{{qid}}c{{cid}}" disabled {{isChecked qid cid}} />
-						{{#if raw}}
-							{{{text}}}
-						{{else}}
-							{{text}}
-						{{/if}}
+						{{{fmt text}}}
 						<br>
 					</label>
 				{{/choices}}
