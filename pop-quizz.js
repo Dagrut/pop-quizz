@@ -334,6 +334,8 @@ function computeStudentMark(id) {
 	if(!pq.studentData[id].form)
 		return(false);
 	
+	pq.log.studResults("Student " + pq.opts.students[id] + " (" + id + ") answers : " + JSON.stringify(pq.studentData[id].form));
+	
 	var studentResponses = pq.studentData[id].form;
 	
 	var points = 0;
@@ -382,7 +384,7 @@ function loadLogs() {
 		(options.meta && Object.keys(options.meta).length ? '\n\t'+ JSON.stringify(options.meta) : '' );
 	}
 	
-	var list = ["access", "ioconn", "studLogs"];
+	var list = ["access", "ioconn", "studLogs", "studResults"];
 	for(var i = 0 ; i < list.length ; i++) {
 		var type = list[i];
 		
