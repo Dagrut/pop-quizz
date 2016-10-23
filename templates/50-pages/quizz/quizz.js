@@ -1,5 +1,10 @@
 (function() {
 	tplEvents['quizz'] = function() {
+		if(quizz.onquizz)
+			eval(quizz.onquizz);
+		
+		Prism.highlightAll();
+		
 		var $quizz = $('#quizz');
 		$quizz.submit(function(evt) {
 			evt.preventDefault();
@@ -40,6 +45,7 @@
 	function startTimer() {
 		stopTimer();
 		
+		var isLastMin = false;
 		timerId = setInterval(function() {
 			if(remainingTime <= 0) {
 				sendQuizzNow();
@@ -47,8 +53,10 @@
 			}
 			remainingTime -= 1;
 			setTimerTxt();
-			if(remainingTime == 60)
+			if(remainingTime <= 60 && !isLastMin) {
+				isLastMin = true;
 				$timerTarget.addClass('last-minute');
+			}
 		}, 1000);
 		
 		setTimerTxt();

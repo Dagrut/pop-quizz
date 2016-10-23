@@ -32,4 +32,16 @@ exp.questions = [
 	},
 ];
 
+exp.oninit = function() {
+	console.log('This function will be executed when ready');
+};
+
+exp.onquizz = function() {
+	console.log('This function will be executed when the quizz was just displayed');
+};
+
+exp.onsolve = function() {
+	console.log('This function will be executed when the quizz solution was just displayed');
+};
+
 module.exports = exp;

@@ -18,6 +18,9 @@ $(function() {
 	socket.on('init', function(students_, quizz_) {
 		students = students_;
 		quizz = quizz_;
+		console.log('quizz', quizz);
+		if(quizz.oninit)
+			eval(quizz.oninit);
 	});
 	
 	socket.on('showList', function() {
@@ -32,12 +35,6 @@ $(function() {
 				return(-1);
 			return(0);
 		});
-		
-		for(var i = 0 ; i < quizz.questions.length ; i++) {
-			quizz.questions[i].choices = arrayShuffle(quizz.questions[i].choices);
-		}
-		
-		quizz.questions = arrayShuffle(quizz.questions);
 		
 		renderTemplate('names-list', {
 			names: mappedStudents,
@@ -72,6 +69,12 @@ $(function() {
 	
 	socket.on('quizz', function(form, duration) {
 		remainingTime = duration;
+		
+		for(var i = 0 ; i < quizz.questions.length ; i++) {
+			quizz.questions[i].choices = arrayShuffle(quizz.questions[i].choices);
+		}
+		
+		quizz.questions = arrayShuffle(quizz.questions);
 		
 		Handlebars.registerHelper('isChecked', function(qid, cid, options) {
 			qid = 'q' + qid;

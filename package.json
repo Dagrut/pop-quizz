@@ -1,29 +1,30 @@
 {
-	"name": "pop-quizz",
-	"version": "1.0.0",
-	"private": true,
-	"description": "Pop quizz generator for teachers bored of printing and correcting tests",
-	"main": "pop-quizz.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [
-		"pop",
-		"quizz",
-		"multiple",
-		"choice",
-		"student",
-		"teacher"
-	],
-	"dependencies": {
-		"express": "~4.14.0",
-		"handlebars": "~4.0.5",
-		"jquery": "~3.1.1",
-		"less": "~2.7.1",
-		"mkdirp": "~0.5.1",
-		"showdown": "~1.4.3",
-		"socket.io": "~1.5.0"
-	},
-	"author": "Dagrut",
-	"license": "MIT"
+  "name": "pop-quizz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pop quizz generator for teachers bored of printing and correcting tests",
+  "main": "pop-quizz.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pop",
+    "quizz",
+    "multiple",
+    "choice",
+    "student",
+    "teacher"
+  ],
+  "dependencies": {
+    "express": "~4.14.0",
+    "handlebars": "~4.0.5",
+    "jquery": "~3.1.1",
+    "less": "~2.7.1",
+    "mkdirp": "~0.5.1",
+    "prismjs": "^1.5.1",
+    "showdown": "~1.4.3",
+    "socket.io": "~1.5.0"
+  },
+  "author": "Dagrut",
+  "license": "MIT"
 }

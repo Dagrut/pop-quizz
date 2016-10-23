@@ -149,6 +149,13 @@ function fillQuizz(quizz) {
 		quizz.duration = 60;
 	
 	quizz.duration = (quizz.duration * 60 * 1000) | 0;
+	
+	if(quizz.oninit)
+		quizz.oninit = '(' + quizz.oninit.toString() + ')();';
+	if(quizz.onquizz)
+		quizz.onquizz = '(' + quizz.onquizz.toString() + ')();';
+	if(quizz.onsolve)
+		quizz.onsolve = '(' + quizz.onsolve.toString() + ')();';
 }
 
 function filterQuizz(quizz) {
@@ -408,6 +415,8 @@ function loadRoutes() {
 	pq.app.use('/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist/')));
 	pq.app.use('/handlebars', express.static(path.join(__dirname, 'node_modules/handlebars/dist')));
 	pq.app.use('/showdown', express.static(path.join(__dirname, 'node_modules/showdown/dist')));
+	pq.app.use('/prismjs/js', express.static(path.join(__dirname, 'node_modules/prismjs')));
+	pq.app.use('/prismjs/css', express.static(path.join(__dirname, 'node_modules/prismjs/themes')));
 	
 	pq.app.get('/', function(req, res) {
 		pq.log.access("Access from " + req.client.remoteAddress);
