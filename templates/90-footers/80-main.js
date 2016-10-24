@@ -104,7 +104,7 @@ $(function() {
 		Handlebars.unregisterHelper('isChecked');
 	});
 	
-	socket.on('solution', function(okQuizz, form) {
+	socket.on('solution', function(okQuizz, form, mark) {
 		Handlebars.registerHelper('isGood', function(qid, cid, isok) {
 			var ret = '';
 			qid = 'q' + qid;
@@ -136,6 +136,8 @@ $(function() {
 			title: okQuizz.title,
 			student: students[currentStudent],
 			questions: okQuizz.questions,
+			mark: mark,
+			markBase: okQuizz.markBase,
 		});
 		
 		Handlebars.unregisterHelper('getType');

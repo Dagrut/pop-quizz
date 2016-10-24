@@ -240,7 +240,7 @@ function loadIo() {
 			
 			if(pq.state == STATES.solve) {
 				computeStudentMark(id);
-				client.emit('solution', pq.opts.quizz, pq.studentData[id].form);
+				client.emit('solution', pq.opts.quizz, pq.studentData[id].form, pq.studentData[id].mark);
 			}
 			else if(pq.studentData[id].mark !== undefined)
 				client.emit('mark', pq.studentData[id].mark, pq.opts.quizz.markBase);
@@ -317,7 +317,7 @@ function loadIo() {
 			timeLeft |= 0;
 			
 			if(pq.state == STATES.solve)
-				client.emit('solution', pq.opts.quizz, pq.studentData[id].form);
+				client.emit('solution', pq.opts.quizz, pq.studentData[id].form, pq.studentData[id].mark);
 			else if(pq.studentData[id].mark !== undefined)
 				client.emit('mark', pq.studentData[id].mark, pq.opts.quizz.markBase);
 			else
@@ -515,7 +515,7 @@ function loadShell() {
 						
 						pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") was forced to terminate quizz (correction) with mark " + cur.mark + " with " + timeLeftStr + " minutes left")
 					}
-					cur.client.emit('solution', pq.opts.quizz, cur.form);
+					cur.client.emit('solution', pq.opts.quizz, cur.form, cur.mark);
 				}
 			}
 			resetPrompt();
