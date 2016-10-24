@@ -18,7 +18,7 @@ $(function() {
 	socket.on('init', function(students_, quizz_) {
 		students = students_;
 		quizz = quizz_;
-		console.log('quizz', quizz);
+		
 		if(quizz.oninit)
 			eval(quizz.oninit);
 	});
@@ -128,7 +128,7 @@ $(function() {
 		Handlebars.unregisterHelper('isChecked');
 	});
 	
-	$window = $(window);
+	var $window = $(window);
 	$window.blur(function() {
 		socket.emit('blur');
 	});
