@@ -11,7 +11,7 @@
 				{{#choices}}
 					<label>
 						<span class="goodbad {{isGood qid cid ok}}">&nbsp;</span>
-						<input type="checkbox" name="q{{qid}}" value="q{{qid}}c{{cid}}" disabled {{isChecked qid cid}} />
+						<input type="{{getType @../index}}" name="q{{qid}}" value="q{{qid}}c{{cid}}" disabled {{isChecked qid cid}} />
 						{{{fmt text}}}
 						<br>
 					</label>

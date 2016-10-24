@@ -5,19 +5,19 @@
 		<h3>Étudiant: {{student}}</h3>
 		<h4>Questions :</h4>
 		<ul>
-		{{#questions}}
+		{{#each questions}}
 			<li>
 				{{{fmt title}}}
 				<br>
-				{{#choices}}
+				{{#each choices}}
 					<label>
-						<input type="checkbox" name="q{{qid}}" value="q{{qid}}c{{cid}}" {{#isChecked qid cid}}checked{{/isChecked}} />
+						<input type="{{getType @../index}}" name="q{{qid}}" value="q{{qid}}c{{cid}}" {{#isChecked qid cid}}checked{{/isChecked}} />
 						{{{fmt text}}}
 						<br>
 					</label>
-				{{/choices}}
+				{{/each}}
 			</li>
-		{{/questions}}
+		{{/each}}
 		</ul>
 		<button type="submit">Terminer</button>
 	</form>

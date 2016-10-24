@@ -86,6 +86,13 @@ $(function() {
 			if(objGet(form, [qid, cid], false))
 				return(options.fn(this));
 		});
+		Handlebars.registerHelper('getType', function(parentid) {
+			var q = quizz.questions[parentid];
+			if(q.radio)
+				return('radio');
+			else
+				return('checkbox');
+		});
 		
 		renderTemplate('quizz', {
 			title: quizz.title,
@@ -93,6 +100,7 @@ $(function() {
 			questions: quizz.questions,
 		});
 		
+		Handlebars.unregisterHelper('getType');
 		Handlebars.unregisterHelper('isChecked');
 	});
 	
@@ -108,14 +116,20 @@ $(function() {
 			else
 				return('good-response');
 		});
-		
-		Handlebars.registerHelper('isChecked', function(qid, cid, isok) {
+		Handlebars.registerHelper('isChecked', function(qid, cid) {
 			qid = 'q' + qid;
 			cid = qid + 'c' + cid;
 			var isChecked = objGet(form, [qid, cid], false);
 			if(isChecked)
 				return('checked');
 			return('');
+		});
+		Handlebars.registerHelper('getType', function(parentid) {
+			var q = okQuizz.questions[parentid];
+			if(q.radio)
+				return('radio');
+			else
+				return('checkbox');
 		});
 		
 		renderTemplate('solution', {
@@ -124,6 +138,7 @@ $(function() {
 			questions: okQuizz.questions,
 		});
 		
+		Handlebars.unregisterHelper('getType');
 		Handlebars.unregisterHelper('isGood');
 		Handlebars.unregisterHelper('isChecked');
 	});

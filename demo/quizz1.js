@@ -17,6 +17,7 @@ exp.questions = [
 	},
 	{
 		title: "An other easy question : What is the?",
+		radio: true, // Will show radio buttons for this question.
 		choices: [
 			{ ok: true,  grp: "keep this order", text: "42" },
 			{ ok: false, grp: "up or down, not in between", text: "I know but I won't say" },
