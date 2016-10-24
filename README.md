@@ -54,9 +54,11 @@ Here are the available options of `pop-quizz` :
 
 ##Files syntax
 
-You should look at the files inside the `demo` directory to see some examples of files.
+The students list should be a plaint text file with a name per line. No comments or else are allowed, so you may use any characters. Empty lines will be removed and the names will be sorted alphabetically.
 
-Each question and response will be displayed through a markdown renderer, so you can use the markdown syntax here.
+The quizz file is a javascript file containing questions, answers, and also some details about the rendering of the whole quizz. Each question and response will get through a markdown renderer, so you can use the markdown syntax here.
+
+You should look at the files inside the `demo` directory to see some examples of files.
 
 ##Notes about the behavior of pop-quizz
 

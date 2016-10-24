@@ -55,9 +55,28 @@ function objGet(obj, path, dft) {
 
 function arrayShuffle(arr) {
 	var ret = [];
-	while(arr.length > 0) {
-		var i = (Math.random() * arr.length) | 0;
-		ret.push(arr.splice(i, 1)[0]);
+	var groups = {};
+	
+	for(var i = 0 ; i < arr.length ; i++) {
+		var cur = arr[i];
+		var grp = 'nogrp-' + i;
+		
+		if(cur.grp)
+			grp = 'grp-' + cur.grp;
+		
+		if(groups.hasOwnProperty(grp))
+			groups[grp].push(cur);
+		else
+			groups[grp] = [cur];
 	}
+	
+	var keys = Object.keys(groups);
+	
+	while(keys.length > 0) {
+		var i = (Math.random() * keys.length) | 0;
+		i = keys.splice(i, 1)[0];
+		ret = ret.concat(groups[i]);
+	}
+	
 	return(ret);
 }

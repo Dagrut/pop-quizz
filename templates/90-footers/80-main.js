@@ -70,11 +70,15 @@ $(function() {
 	socket.on('quizz', function(form, duration) {
 		remainingTime = duration;
 		
-		for(var i = 0 ; i < quizz.questions.length ; i++) {
-			quizz.questions[i].choices = arrayShuffle(quizz.questions[i].choices);
+		if(quizz.ashuffle) {
+			for(var i = 0 ; i < quizz.questions.length ; i++) {
+				quizz.questions[i].choices = arrayShuffle(quizz.questions[i].choices);
+			}
 		}
 		
-		quizz.questions = arrayShuffle(quizz.questions);
+		if(quizz.qshuffle) {
+			quizz.questions = arrayShuffle(quizz.questions);
+		}
 		
 		Handlebars.registerHelper('isChecked', function(qid, cid, options) {
 			qid = 'q' + qid;

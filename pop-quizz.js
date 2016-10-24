@@ -150,6 +150,11 @@ function fillQuizz(quizz) {
 	
 	quizz.duration = (quizz.duration * 60 * 1000) | 0;
 	
+	if(!quizz.hasOwnProperty("qshuffle"))
+		quizz.qshuffle = true;
+	if(!quizz.hasOwnProperty("ashuffle"))
+		quizz.ashuffle = true;
+	
 	if(quizz.oninit)
 		quizz.oninit = '(' + quizz.oninit.toString() + ')();';
 	if(quizz.onquizz)

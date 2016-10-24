@@ -3,6 +3,9 @@ var exp = {};
 exp.title = "Quizz du 01/01/2000";
 exp.markBase = 20; // The note will be on 20
 exp.duration = 30; // In minutes
+exp.qshuffle = true; // Should we shuffle questions? Defaults to true
+exp.ashuffle = true; // Should we shuffle answers in each question? Defaults to true
+
 exp.questions = [
 	{
 		title: "Is this question using `<html>` characters?",
@@ -10,14 +13,16 @@ exp.questions = [
 			{ ok: true,  text: "<code>yes</code>" },
 			{ ok: false, text: "Nope" },
 		],
+		grp: "group1", // You can define a group inside a question or an answer, so these elements (of the same kind) will be kept together AND ALSO in the same order!
 	},
 	{
 		title: "An other easy question : What is the?",
 		choices: [
-			{ ok: true,  text: "42" },
-			{ ok: false, text: "I know but I won't say" },
-			{ ok: false, text: "I don't know" },
+			{ ok: true,  grp: "keep this order", text: "42" },
+			{ ok: false, grp: "up or down, not in between", text: "I know but I won't say" },
+			{ ok: false, grp: "keep this order", text: "I don't know" },
 		],
+		grp: "group1",
 	},
 	{
 		title: "1 + 1 = ?",
