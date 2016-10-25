@@ -576,7 +576,7 @@ function loadShell() {
 			if(pq.studentData.hasOwnProperty(id)) {
 				dur = pq.opts.quizz.duration - (Date.now() - pq.studentData[id].start);
 				ip = pq.studentData[id].ip || '-';
-				mark = pq.studentData[id].mark || '-';
+				mark = (pq.studentData[id].mark !== undefined ? pq.studentData[id].mark : '-');
 			}
 			
 			dur /= 1000;
@@ -640,27 +640,6 @@ function loadShell() {
 			}
 		});
 	};
-	
-	cmds.timelist = cmds.listtime = cmds.showtime = cmds.timeshow = cmds.times = function(studMatch) {
-		if(!studMatch)
-			studMatch = '*';
-		
-		searchStudent(studMatch, function(id, studName) {
-			var dur = pq.opts.quizz.duration;
-			
-			if(pq.studentData.hasOwnProperty(id))
-				dur = pq.opts.quizz.duration - (Date.now() - pq.studentData[id].start);
-			
-			dur /= 1000;
-			dur |= 0;
-			if(dur < 0)
-				dur = 0;
-			dur = padString((dur / 60) | 0, 2, '0') + ':' + padString(dur % 60, 2, '0');
-			dur = padString(dur, 6, ' ', 'r');
-			console.log(dur + ' minutes left for student ' + studName + ' (' + id + ')');
-		});
-	};
-	cmds.timelist.mandatoryArgs = 0;
 	
 	cmds.exit = cmds.quit = cmds.close = cmds.q = function() {
 		console.log('Quitting...');
