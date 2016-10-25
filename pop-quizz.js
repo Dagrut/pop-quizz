@@ -286,13 +286,17 @@ function loadIo() {
 		});
 		
 		client.on('blur', function() {
-			if(pq.studentIpPool.hasOwnProperty(clientIP))
+			if(pq.studentIpPool.hasOwnProperty(clientIP)) {
+				var id = pq.studentIpPool[clientIP];
 				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") went away");
+			}
 		});
 		
 		client.on('focus', function() {
-			if(pq.studentIpPool.hasOwnProperty(clientIP))
+			if(pq.studentIpPool.hasOwnProperty(clientIP)) {
+				var id = pq.studentIpPool[clientIP];
 				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") came back");
+			}
 		});
 		
 		if(pq.state == STATES.idle)
