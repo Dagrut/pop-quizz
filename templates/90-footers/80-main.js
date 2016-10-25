@@ -145,12 +145,25 @@ $(function() {
 		Handlebars.unregisterHelper('isChecked');
 	});
 	
+	var blurTime;
 	var $window = $(window);
 	$window.blur(function() {
 		socket.emit('blur');
+		blurTime = Date.now();
 	});
 	
 	$window.focus(function() {
 		socket.emit('focus');
+		if(!blurTime)
+			return;
+		var diff = (Date.now() - blurTime) / 1000;
+		var strdiff = '**' + diff.toFixed(1) + '**';
+		
+		notify(
+			"Vous avez quitté la fenêtre du QCM pendant " + strdiff + " secondes.<br> \
+Cela a été enregistré et pourra être pris en compte dans la notation si vous en abusez!",
+			8000,
+			(diff >= 30 ? "error" : "warn")
+		);
 	});
 });

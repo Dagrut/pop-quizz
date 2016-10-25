@@ -6,13 +6,15 @@ function renderTemplate(name, vars) {
 	if(!target.length)
 		target = $('body');
 	
-	target.html(rendered);
+	rendered = $(rendered);
 	
-	var loadEvts = function(name) {
+	var method = tplnode.data('method') || 'html';
+	target[method](rendered);
+	
+	// Just to make sure the DOM was updated... Am I paranoid?
+	setTimeout(function() {
 		if(tplEvents.hasOwnProperty(name)) {
-			tplEvents[name]();
+			tplEvents[name](rendered, vars);
 		}
-	};
-	
-	target.append('<script>(' + loadEvts.toString() + ')(' + JSON.stringify(name) + ');</script>');
+	}, 0);
 }

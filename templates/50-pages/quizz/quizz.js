@@ -1,11 +1,10 @@
 (function() {
-	tplEvents['quizz'] = function() {
+	tplEvents['quizz'] = function($quizz) {
 		if(quizz.onquizz)
 			eval(quizz.onquizz);
 		
 		Prism.highlightAll();
 		
-		var $quizz = $('#quizz');
 		$quizz.submit(function(evt) {
 			evt.preventDefault();
 			evt.stopPropagation();
