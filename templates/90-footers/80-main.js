@@ -53,8 +53,20 @@ $(function() {
 		});
 	});
 	
-	socket.on('youare', function(userId) {
+	socket.on('youare', function(userId, discTime) {
 		currentStudent = userId;
+		
+		if(discTime > 0) {
+			var strDiscTime = '**' + discTime + '**';
+			var msg = students[userId] + ", vous ";
+			
+			msg += "vous êtes déconnecté du QCM pendant ";
+			msg += strDiscTime;
+			msg += " secondes.<br> ";
+			msg += "Cela a été enregistré et pourra être pris en compte dans la notation si vous en abusez!";
+			
+			notify(msg, 8000, (discTime >= 30 ? "error" : "warn"));
+		}
 	});
 	
 	socket.on('student-taken', function(uid) {

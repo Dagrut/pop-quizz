@@ -196,6 +196,7 @@ function loadIo() {
 			if(pq.ioStudents[clientUid] !== false) {
 				var id = pq.ioStudents[clientUid];
 				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") disconnected from " + clientIP)
+				pq.studentData[id].disctime = Date.now();
 				delete pq.studentData[id].client;
 			}
 			delete pq.ioStudents[clientUid];
@@ -288,6 +289,7 @@ function loadIo() {
 		client.on('blur', function() {
 			if(pq.studentIpPool.hasOwnProperty(clientIP)) {
 				var id = pq.studentIpPool[clientIP];
+				pq.studentData[id].blurtime = Date.now();
 				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") went away");
 			}
 		});
@@ -295,7 +297,9 @@ function loadIo() {
 		client.on('focus', function() {
 			if(pq.studentIpPool.hasOwnProperty(clientIP)) {
 				var id = pq.studentIpPool[clientIP];
-				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") came back");
+				var blurDur = (Date.now() - pq.studentData[id].blurtime) / 1000;
+				blurDur = blurDur.toFixed(1);
+				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") came back " + blurDur + " seconds later");
 			}
 		});
 		
@@ -312,9 +316,14 @@ function loadIo() {
 				return;
 			}
 			
-			pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") reconnected from " + clientIP);
+			var discDur = (Date.now() - pq.studentData[id].disctime) / 1000;
+			discDur = discDur.toFixed(1);
+			pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") reconnected from " + clientIP + " " + discDur + " seconds later");
 			
-			client.emit('youare', id);
+			pq.ioStudents[clientUid] = id;
+			pq.studentData[id].client = client;
+			
+			client.emit('youare', id, discDur);
 			
 			var timeLeft = pq.opts.quizz.duration - (Date.now() - pq.studentData[id].start);
 			timeLeft /= 1000;
@@ -604,6 +613,8 @@ function loadShell() {
 					delete pq.studentData[id].start;
 					delete pq.studentData[id].form;
 					delete pq.studentData[id].mark;
+					delete pq.studentData[id].blurtime;
+					delete pq.studentData[id].disctime;
 					delete pq.studentData[id].ip;
 					if(pq.studentData[id].client)
 						pq.studentData[id].client.disconnect();
