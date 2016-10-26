@@ -73,3 +73,11 @@ Every important action is logged, so you may know who is doing what (like when s
 The marks are also written in the log files, side by side with the remaining time for the quizz, when they submitted it. Also if a student reach the time limit, the quizz will be automatically submitted for him.
 
 When a student checks all good responses and doesn't check the other ones, he gets one point. If he doesn't, he gets 0 for this question.
+
+##TODO
+
+- [ ] Add a translation system, to show all strings displayed to the users, and also translate the output of the shell (For now I could not find something flexible enough to be used on server and browser side easily).
+- [ ] Add an administration interface, for lazy people.
+- [ ] Add more possible customizations
+- [ ] Add a way to use other templates, styles, ... without having to change the `templates` directory.
+- [ ] Maybe split server code into multiple files.
