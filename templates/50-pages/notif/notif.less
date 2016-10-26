@@ -1,9 +1,10 @@
 #notifs-root {
-	position: absolute;
+	position: fixed;
 	top: 0px;
 	left: 0px;
 	width: 100vw;
 	height: 0px;
+	z-index: 100;
 	overflow: visible;
 	text-align: center;
 	
@@ -12,22 +13,18 @@
 		background-color: white;
 		border: 1px solid black;
 		border-radius: 2vh;
-		height: 0;
-		line-height: 0;
-		padding-top: 0;
-		padding-bottom: 0;
-		margin-top: 0;
-		width: 30vw;
-		opacity: 0;
-		transition: 0.4s ease-in-out;
+		height: auto;
+		margin-top: 2vh;
+		width: 40vw;
+		visibility: hidden;
+		
+		p {
+			margin: 0px;
+			padding: 3vh 2vw;
+		}
 		
 		&.notif-visible {
-			height: auto;
-			line-height: normal;
-			margin-top: 2vh;
-			padding: 3vh 2vw;
-			opacity: 1;
-			transition: 0.4s ease-in-out;
+			visibility: visible;
 		}
 		
 		&.notif-style-warn {
