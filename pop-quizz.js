@@ -125,7 +125,7 @@ function loadArguments() {
 		if(students[i])
 			opts.students.push(students[i]);
 	}
-	opts.quizz = require(quizzFile);
+	opts.quizz = require(path.resolve(process.cwd(), quizzFile));
 	fillQuizz(opts.quizz);
 	opts.pubQuizz = filterQuizz(opts.quizz);
 	
