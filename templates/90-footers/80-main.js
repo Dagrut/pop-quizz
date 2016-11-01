@@ -84,12 +84,12 @@ $(function() {
 		
 		if(quizz.ashuffle) {
 			for(var i = 0 ; i < quizz.questions.length ; i++) {
-				quizz.questions[i].choices = arrayShuffle(quizz.questions[i].choices);
+				quizz.questions[i].choices = arrayGrpShuffle(quizz.questions[i].choices, quizz.gshuffle, quizz.gshuffleDft);
 			}
 		}
 		
 		if(quizz.qshuffle) {
-			quizz.questions = arrayShuffle(quizz.questions);
+			quizz.questions = arrayGrpShuffle(quizz.questions, quizz.gshuffle, quizz.gshuffleDft);
 		}
 		
 		Handlebars.registerHelper('isChecked', function(qid, cid, options) {

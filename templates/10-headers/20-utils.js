@@ -55,14 +55,26 @@ function objGet(obj, path, dft) {
 
 function arrayShuffle(arr) {
 	var ret = [];
+	while(arr.length > 0) {
+		var i = (Math.random() * arr.length) | 0;
+		ret.push(arr.splice(i, 1)[0]);
+	}
+	return(ret);
+}
+
+function arrayGrpShuffle(arr, toShuffle, toShuffleDefault) {
+	var ret = [];
 	var groups = {};
+	var grpHash = {};
 	
 	for(var i = 0 ; i < arr.length ; i++) {
 		var cur = arr[i];
 		var grp = 'nogrp-' + i;
 		
-		if(cur.grp)
+		if(cur.grp) {
 			grp = 'grp-' + cur.grp;
+			grpHash[grp] = cur.grp;
+		}
 		
 		if(groups.hasOwnProperty(grp))
 			groups[grp].push(cur);
@@ -70,12 +82,22 @@ function arrayShuffle(arr) {
 			groups[grp] = [cur];
 	}
 	
-	var keys = Object.keys(groups);
+	var keys = arrayShuffle(Object.keys(groups));
 	
 	while(keys.length > 0) {
-		var i = (Math.random() * keys.length) | 0;
-		i = keys.splice(i, 1)[0];
-		ret = ret.concat(groups[i]);
+		var key = keys.pop();
+		var grp = groups[key];
+		if(grpHash.hasOwnProperty(key)) {
+			var truegrp = grpHash[key];
+			if(toShuffle.hasOwnProperty(truegrp)) {
+				if(toShuffle[truegrp])
+					grp = arrayShuffle(grp);
+			}
+			else if(toShuffleDefault) {
+				grp = arrayShuffle(grp);
+			}
+		}
+		ret = ret.concat(grp);
 	}
 	
 	return(ret);

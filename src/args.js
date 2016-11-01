@@ -91,6 +91,27 @@ function fillQuizz(quizz) {
 		quizz.qshuffle = true;
 	if(!quizz.hasOwnProperty("ashuffle"))
 		quizz.ashuffle = true;
+	if(!quizz.hasOwnProperty("gshuffle"))
+		quizz.gshuffle = false;
+	if(typeof quizz.gshuffle == 'boolean') {
+		quizz.gshuffleDft = quizz.gshuffle;
+		quizz.gshuffle = {};
+	}
+	else if(typeof quizz.gshuffle == 'object') {
+		var keys = Object.keys(quizz.gshuffle);
+		if(keys.length > 0) {
+			var v = !! quizz.gshuffle[keys[0]];
+			for(var i in quizz.gshuffle)
+				quizz.gshuffle[i] = v;
+			quizz.gshuffleDft = !v;
+		}
+		else {
+			quizz.gshuffleDft = false;
+		}
+	}
+	else {
+		throw new Error('Invalid value for quizz.gshuffle!');
+	}
 	
 	if(quizz.oninit)
 		quizz.oninit = '(' + quizz.oninit.toString() + ')();';
