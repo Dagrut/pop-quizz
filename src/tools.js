@@ -72,6 +72,7 @@ tools.computeStudentMark = function computeStudentMark(id) {
 	
 	var points = 0;
 	var quizzq = pq.opts.quizz.questions;
+	var totalPoints = 0;
 	for(var i = 0 ; i < quizzq.length ; i++) {
 		var curq = quizzq[i];
 		var good = 0;
@@ -82,11 +83,13 @@ tools.computeStudentMark = function computeStudentMark(id) {
 			}
 		}
 		
+		var weight = curq.points || 1;
+		totalPoints += weight;
 		if(curq.choices.length == good)
-			points++;
+			points += weight;
 	}
 	
-	var mark = points / quizzq.length;
+	var mark = points / totalPoints;
 	mark *= pq.opts.quizz.markBase * 10;
 	mark |= 0;
 	mark /= 10;

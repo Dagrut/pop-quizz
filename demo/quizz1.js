@@ -35,6 +35,7 @@ exp.questions = [
 			{ ok: false, text: "The moon" },
 			{ ok: true,  text: "Cubic root of 8" },
 		],
+		points: 18, /* This question is worth 18 points. If not specified, it is worth 1 point */
 	},
 ];
 
