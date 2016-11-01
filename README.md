@@ -80,4 +80,4 @@ When a student checks all good responses and doesn't check the other ones, he ge
 - [ ] Add an administration interface, for lazy people.
 - [ ] Add more possible customizations
 - [ ] Add a way to use other templates, styles, ... without having to change the `templates` directory.
-- [ ] Maybe split server code into multiple files.
+- [x] Maybe split server code into multiple files.
