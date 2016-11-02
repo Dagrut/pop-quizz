@@ -26,7 +26,7 @@ make demo
 To run it with custom options, you may try something like :
 
 ```
-node pop-quizz.js -q ./some/quizz/file.js -s ./a/students/list -l ./output/logs/dir
+node pop-quizz.js -q ./some/quizz/file.js -s ./a/students/list -d ./output/data/dir
 ```
 
 ##Options
@@ -35,9 +35,9 @@ Here are the available options of `pop-quizz` :
 
 - `-q` *MANDATORY* Specify the quizz file.
 - `-s` *MANDATORY* Specify the studends list file.
-- `-l` *MANDATORY* Specify the log directory output.
+- `-d` *MANDATORY* Specify the data directory output (will contain saved state and logs).
 - `-p` *OPTIONNAL* Specify the http listen port. Defaults to 8080.
-- `-r` *OPTIONNAL* Run the quizz instantly, don't wait. You will not need to type `run` after starting.
+- `-r` *OPTIONNAL* Run the quizz instantly, don't wait. You will not need to type `run` after starting. Mainly for testing.
 
 ##Commands
 

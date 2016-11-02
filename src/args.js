@@ -6,7 +6,7 @@ function parseArgs() {
 	var opts = {};
 	var studentsFile;
 	var quizzFile;
-	var logDir;
+	var dataDir;
 	var runNow = false;
 	var port = 8080;
 	
@@ -20,9 +20,9 @@ function parseArgs() {
 			i++;
 			quizzFile = process.argv[i];
 		}
-		else if(cur == "-l") {
+		else if(cur == "-d") {
 			i++;
-			logDir = process.argv[i];
+			dataDir = process.argv[i];
 		}
 		else if(cur == "-p") {
 			i++;
@@ -32,16 +32,16 @@ function parseArgs() {
 			runNow = true;
 	}
 	
-	if(!studentsFile || !quizzFile || !logDir) {
+	if(!studentsFile || !quizzFile || !dataDir) {
 		console.log("Error! Missing at lease one option (-q, -s or -l)");
 		process.exit(1);
 	}
 	
 	try {
-		mkdirp.sync(logDir);
+		mkdirp.sync(dataDir);
 	}
 	catch(e) {
-		console.log('Error! Cannot create directory ' + logDir);
+		console.log('Error! Cannot create directory ' + dataDir);
 		process.exit(1);
 	}
 	
@@ -54,7 +54,7 @@ function parseArgs() {
 	else
 		opts.port = port;
 	
-	opts.logDir = logDir;
+	opts.dataDir = dataDir;
 	
 	var students = fs.readFileSync(studentsFile).toString('utf8').split('\n');
 	opts.students = [];

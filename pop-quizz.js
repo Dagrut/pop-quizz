@@ -4,7 +4,7 @@ const express = require('express');
 const socketio = require('socket.io');
 
 const argsParser = require('./src/args.js');
-const logsLoader = require('./src/logs.js');
+const loadData = require('./src/data.js');
 const loadExpress = require('./src/express.js');
 const loadSocketIo = require('./src/socketio.js');
 const loadShell = require('./src/shell.js');
@@ -26,13 +26,14 @@ function main() {
 	pq.server = http.createServer(pq.app);
 	pq.io = socketio(pq.server);
 	
-	logsLoader();
-	loadExpress();
-	
-	pq.server.listen(pq.opts.port);
-	
-	loadSocketIo();
-	loadShell();
+	loadData(function() {
+		loadExpress();
+		
+		pq.server.listen(pq.opts.port);
+		
+		loadSocketIo();
+		loadShell();
+	});
 }
 
 main();

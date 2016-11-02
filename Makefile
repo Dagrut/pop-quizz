@@ -8,4 +8,4 @@ build:
 	mkdir -p ./logs
 
 demo: build
-	node pop-quizz.js -q ./demo/quizz1.js -s ./demo/students -l ./logs -r
+	node pop-quizz.js -q ./demo/quizz1.js -s ./demo/students -d ./demo-data -r

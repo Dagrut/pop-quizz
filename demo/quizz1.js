@@ -55,7 +55,7 @@ exp.questions = [
 		title: "Check the correct answers :",
 		choices: [
 			{ ok: true,  grp: "qelecP", text: "`P = U×I`" },
-			{ ok: true,  grp: "qelecR", text: "`R = U×I`" },
+			{ ok: true,  grp: "qelecR", text: "`R = P÷I²`" },
 			{ ok: true,  grp: "qelecU", text: "`U = R×I`" },
 			{ ok: false, grp: "qelecU", text: "`U = R÷I`" },
 			{ ok: false, grp: "qelecP", text: "`P = R×U`" },

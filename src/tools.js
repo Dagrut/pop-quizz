@@ -99,4 +99,15 @@ tools.computeStudentMark = function computeStudentMark(id) {
 	return(true);
 };
 
+/* Thanks to :
+ * http://stackoverflow.com/a/14810722
+ */
+tools.objMap = function(inputObj, cb) {
+	var newObj = Object.keys(inputObj).reduce(function(target, key) {
+		target[key] = cb(inputObj[key], key);
+		return(target);
+	}, {});
+	return(newObj);
+};
+
 module.exports = tools;

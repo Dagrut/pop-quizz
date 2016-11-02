@@ -45,7 +45,7 @@ function loadIo() {
 				id = pq.studentIpPool[clientIP];
 			
 			if(!pq.studentData.hasOwnProperty(id))
-				pq.studentData[id] = {};
+				pq.studentData[id] = tools.objGet(pq.savedState, ['studentData', id], {});
 			
 			if(tools.objGet(pq.studentData, [id, 'client'])) {
 				client.emit('student-taken', id);
@@ -71,8 +71,12 @@ function loadIo() {
 			}
 			else if(pq.studentData[id].mark !== undefined)
 				client.emit('mark', pq.studentData[id].mark, pq.opts.quizz.markBase);
-			else
-				client.emit('quizz', pq.studentData[id].form, pq.opts.quizz.duration / 1000);
+			else {
+				var timeLeft = pq.opts.quizz.duration - (Date.now() - pq.studentData[id].start);
+				timeLeft /= 1000;
+				timeLeft |= 0;
+				client.emit('quizz', pq.studentData[id].form, timeLeft);
+			}
 		});
 		
 		client.on('quizz-save', function(data) {
