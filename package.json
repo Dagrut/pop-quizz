@@ -23,7 +23,8 @@
     "mkdirp": "~0.5.1",
     "prismjs": "^1.5.1",
     "showdown": "~1.4.3",
-    "socket.io": "~1.5.0"
+    "socket.io": "~1.5.0",
+    "winston": "^2.3.0"
   },
   "author": "Dagrut",
   "license": "MIT"
