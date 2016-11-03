@@ -35,7 +35,7 @@ Here are the available options of `pop-quizz` :
 
 - `-q` *MANDATORY* Specify the quizz file.
 - `-s` *MANDATORY* Specify the studends list file.
-- `-d` *MANDATORY* Specify the data directory output (will contain saved state and logs).
+- `-d` *MANDATORY* Specify the data directory output (will contain saved state, logs, and also a summary file).
 - `-p` *OPTIONNAL* Specify the http listen port. Defaults to 8080.
 - `-r` *OPTIONNAL* Run the quizz instantly, don't wait. You will not need to type `run` after starting. Mainly for testing.
 
@@ -73,6 +73,11 @@ Every important action is logged, so you may know who is doing what (like when s
 The marks are also written in the log files, side by side with the remaining time for the quizz, when they submitted it. Also if a student reach the time limit, the quizz will be automatically submitted for him.
 
 When a student checks all good responses and doesn't check the other ones, he gets one point. If he doesn't, he gets 0 for this question.
+
+When you quit the program, it will do two things (that are also done periodically each 10 seconds) : It will save the current state (each student state, mark, start time, and so on), and also write a **summary.txt** file containing these details in a human readable format. You can check this file whenever you want.
+Note that the content of this file may NOT be the same as the `list` command output, since this command only list the current students state, not the previous ones (that were restored from a past session).
+
+When you restart the program with the same data directory, it will load the previous state and be able to restore the state, marks and other details of each students.
 
 ##TODO
 

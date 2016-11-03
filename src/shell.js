@@ -124,14 +124,14 @@ function loadShell() {
 			studMatch = '*';
 		
 		var tf = tools.tableFormatter(5);
-		tf.addSeparator();
+		
 		tf.add('ID', 'Student name', 'Time', 'Mark', 'IP address');
 		tf.addSeparator();
 		
 		searchStudent(studMatch, function(id, studName) {
 			var dur = pq.opts.quizz.duration;
-			var ip = '-';
-			var mark = '-';
+			var ip = '';
+			var mark = '';
 			
 			if(pq.studentData.hasOwnProperty(id)) {
 				dur = pq.opts.quizz.duration - (Date.now() - pq.studentData[id].start);
@@ -140,10 +140,9 @@ function loadShell() {
 			}
 			
 			dur /= 1000;
-			dur |= 0;
 			if(dur < 0)
 				dur = 0;
-			dur = tools.padString((dur / 60) | 0, 2, '0') + ':' + tools.padString(dur % 60, 2, '0');
+			dur = tools.secondsToMMSS(dur);
 			
 			tf.add(id, studName, dur, mark, ip);
 		});
@@ -164,6 +163,10 @@ function loadShell() {
 					delete pq.studentData[id].mark;
 					delete pq.studentData[id].blurtime;
 					delete pq.studentData[id].disctime;
+					delete pq.studentData[id].blurTotal;
+					delete pq.studentData[id].discTotal;
+					delete pq.studentData[id].blurCount;
+					delete pq.studentData[id].discCount;
 					delete pq.studentData[id].ip;
 					if(pq.studentData[id].client)
 						pq.studentData[id].client.disconnect();
@@ -207,9 +210,7 @@ function loadShell() {
 	
 	cmds.exit = cmds.quit = cmds.close = cmds.q = function() {
 		console.log('Quitting...');
-		rl.close();
-		pq.io.close();
-		pq.server.close();
+		/* Do not close since it may trigger events inside socketIO and we don't want that. */
 		process.exit(0);
 	};
 	

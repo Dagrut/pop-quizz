@@ -110,14 +110,27 @@ tools.objMap = function(inputObj, cb) {
 	return(newObj);
 };
 
-tools.tableFormatter = function tableFormatter(rowsCount) {
+tools.objMerge = function() {
+	var ret = {};
+	for(var i = 0 ; i < arguments.length ; i++) {
+		for(var j in arguments[i]) {
+			ret[j] = arguments[i][j];
+		}
+	}
+	return(ret);
+};
+
+tools.secondsToMMSS = function(dur) {
+	dur |= 0;
+	return(tools.padString((dur / 60) | 0, 2, '0') + ':' + tools.padString(dur % 60, 2, '0'));
+};
+
+tools.tableFormatter = function tableFormatter() {
 	if(!(this instanceof tableFormatter))
-		return(new tableFormatter(rowsCount));
+		return(new tableFormatter());
 	
 	this.rows = [];
 	this.rowLengths = [];
-	for(var i = 0 ; i < rowsCount ; i++)
-		this.rowLengths.push(0);
 };
 
 tools.tableFormatter.prototype.add = function(data) {
@@ -129,7 +142,7 @@ tools.tableFormatter.prototype.add = function(data) {
 	for(var i = 0 ; i < input.length ; i++) {
 		var str = '' + input[i];
 		ins.push(str);
-		if(str.length > this.rowLengths[i])
+		if(str.length > tools.objGet(this.rowLengths, [i], -1))
 			this.rowLengths[i] = str.length;
 	}
 	

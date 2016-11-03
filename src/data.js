@@ -52,7 +52,9 @@ function loadLogs() {
 	}
 }
 
-function loadSaves(stateFile, endCb) {
+function loadSaves(endCb) {
+	var stateFile = path.join(pq.opts.dataDir, "state.json");
+	
 	pq.savedState = {
 		studentData: {},
 	};
@@ -77,19 +79,93 @@ function loadSaves(stateFile, endCb) {
 	});
 }
 
-function runAutoSaver(stateFile) {
+function runAutoSaver() {
+	var stateFile = path.join(pq.opts.dataDir, "state.json");
+	var summaryFile = path.join(pq.opts.dataDir, "summary.txt");
+	
 	function prepareSavedState() {
-		pq.savedState.studentData = tools.objMap(pq.studentData, function(val) {
-			return({
-				form: val.form,
-				start: val.start,
-				mark: val.mark,
-			});
+		var studentData = tools.objMerge(pq.savedState.studentData || {}, pq.studentData);
+		
+		pq.savedState.studentData = tools.objMap(studentData, function(val) {
+			var cpy = {form: true, start: true, mark: true, blurTotal: true, blurCount: true, discTotal: true, discCount: true};
+			for(var i in cpy)
+				cpy[i] = val[i];
+			return(cpy);
 		});
 		
 		pq.savedState.state = pq.state;
 		
 		pq.savedState.saveTime = Date.now();
+	}
+	
+	function prepareSummary() {
+		var tf = tools.tableFormatter(6);
+		
+		tf.addSeparator();
+		tf.add(
+			"ID",
+			"Student",
+			"Status",
+			"Mark",
+			"Time left",
+			"Away duration",
+			"Disc. duration",
+			"Away count",
+			"Disc. count"
+		);
+		tf.addSeparator();
+		
+		var studentData = tools.objMerge(pq.savedState.studentData || {}, pq.studentData);
+		
+		for(var id = 0 ; id < pq.opts.students.length ; id++) {
+			var status = "Waiting";
+			var awayDur = 0;
+			var discDur = 0;
+			var awayCount = 0;
+			var discCount = 0;
+			var tleft = pq.opts.quizz.duration / 1000;
+			var mark = '';
+			
+			if(studentData.hasOwnProperty(id)) {
+				if(studentData[id].mark !== undefined) {
+					mark = studentData[id].mark;
+					status = "Ended";
+				}
+				else {
+					status = "Started";
+				}
+				
+				awayDur = studentData[id].blurTotal || 0;
+				discDur = studentData[id].discTotal || 0;
+				awayCount = studentData[id].blurCount || 0;
+				discCount = studentData[id].discCount || 0;
+				
+				tleft = pq.opts.quizz.duration - (Date.now() - studentData[id].start);
+				
+				tleft /= 1000;
+				if(tleft < 0)
+					tleft = 0;
+			}
+			
+			tf.add(
+				id,
+				pq.opts.students[id],
+				status,
+				mark,
+				tools.secondsToMMSS(tleft),
+				awayDur > 0 ? tools.secondsToMMSS(awayDur) : '',
+				discDur > 0 ? tools.secondsToMMSS(discDur) : '',
+				awayCount || '',
+				discCount || ''
+			);
+		}
+		
+		tf.addSeparator();
+		
+		var ret = "File write date : " + (new Date()).toString() + "\n\n";
+		ret += tf.render();
+		ret += '\n';
+		return(ret);
 	}
 	
 	setInterval(function() {
@@ -98,6 +174,10 @@ function runAutoSaver(stateFile) {
 		fs.writeFile(stateFile, JSON.stringify(pq.savedState), function(err) {
 			if(err)
 				console.console.error("Could not save state file '" + stateFile + "' : " + err);
+		});
+		fs.writeFile(summaryFile, prepareSummary(), function(err) {
+			if(err)
+				console.console.error("Could not save state file '" + summaryFile + "' : " + err);
 		});
 	}, 10000);
 	
@@ -110,14 +190,20 @@ function runAutoSaver(stateFile) {
 		catch(e) {
 			console.error('Could not save state file :', e);
 		}
+		
+		try {
+			fs.writeFileSync(summaryFile, prepareSummary());
+		}
+		catch(e) {
+			console.error('Could not save summary file :', e);
+		}
 	});
 }
 
 function loadData(endCb) {
-	var stateFile = path.join(pq.opts.dataDir, "state.json");
 	loadLogs();
-	loadSaves(stateFile, endCb);
-	runAutoSaver(stateFile);
+	loadSaves(endCb);
+	runAutoSaver();
 }
 
 module.exports = loadData;
