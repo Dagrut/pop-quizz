@@ -110,4 +110,69 @@ tools.objMap = function(inputObj, cb) {
 	return(newObj);
 };
 
+tools.tableFormatter = function tableFormatter(rowsCount) {
+	if(!(this instanceof tableFormatter))
+		return(new tableFormatter(rowsCount));
+	
+	this.rows = [];
+	this.rowLengths = [];
+	for(var i = 0 ; i < rowsCount ; i++)
+		this.rowLengths.push(0);
+};
+
+tools.tableFormatter.prototype.add = function(data) {
+	var input = data;
+	if(!(data instanceof Array))
+		input = Array.prototype.slice.call(arguments);
+	
+	var ins = [];
+	for(var i = 0 ; i < input.length ; i++) {
+		var str = '' + input[i];
+		ins.push(str);
+		if(str.length > this.rowLengths[i])
+			this.rowLengths[i] = str.length;
+	}
+	
+	this.rows.push(ins);
+};
+
+tools.tableFormatter.prototype.addSeparator = function() {
+	this.rows.push('sep');
+};
+
+tools.tableFormatter.prototype.render = function() {
+	var ret = '';
+	var self = this;
+	
+	function renderSep() {
+		for(var i = 0 ; i < self.rowLengths.length ; i++) {
+			ret += "+";
+			ret += tools.padString('', self.rowLengths[i] + 2, '-');
+		}
+		ret += "+";
+	}
+	
+	function renderRow(row) {
+		for(var i = 0 ; i < row.length ; i++) {
+			ret += "| ";
+			ret += tools.padString(row[i], self.rowLengths[i], ' ', 'r');
+			ret += " ";
+		}
+		ret += "|";
+	}
+	
+	for(var i = 0 ; i < this.rows.length ; i++) {
+		if(i > 0)
+			ret += "\n";
+		
+		var row = this.rows[i];
+		if(row === 'sep')
+			renderSep();
+		else
+			renderRow(row);
+	}
+	
+	return(ret);
+};
+
 module.exports = tools;

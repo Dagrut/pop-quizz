@@ -123,17 +123,10 @@ function loadShell() {
 		if(!studMatch)
 			studMatch = '*';
 		
-		function prt(id, name, time, mark, ip) {
-			var prt = [];
-			prt.push(tools.padString(id, 4, ' ', 'r'));
-			prt.push(tools.padString(name, 45, ' ', 'r'));
-			prt.push(tools.padString(time, 7, ' ', 'r'));
-			prt.push(tools.padString(mark, 5, ' ', 'r'));
-			prt.push(tools.padString(ip, 30, ' ', 'r'));
-			console.log('| ' + prt.join(' | ') + ' |');
-		}
-		
-		prt('ID', 'Student name', 'Time', 'Mark', 'IP address');
+		var tf = tools.tableFormatter(5);
+		tf.addSeparator();
+		tf.add('ID', 'Student name', 'Time', 'Mark', 'IP address');
+		tf.addSeparator();
 		
 		searchStudent(studMatch, function(id, studName) {
 			var dur = pq.opts.quizz.duration;
@@ -152,8 +145,10 @@ function loadShell() {
 				dur = 0;
 			dur = tools.padString((dur / 60) | 0, 2, '0') + ':' + tools.padString(dur % 60, 2, '0');
 			
-			prt(id, studName, dur, mark, ip);
+			tf.add(id, studName, dur, mark, ip);
 		});
+		
+		console.log(tf.render());
 	};
 	cmds.l.mandatoryArgs = 0;
 	
