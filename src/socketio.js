@@ -21,9 +21,11 @@ function loadIo() {
 			pq.log.ioconn("Disconnection from " + clientIP);
 			if(pq.ioStudents[clientUid] !== false) {
 				var id = pq.ioStudents[clientUid];
-				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") disconnected from " + clientIP)
-				pq.studentData[id].disctime = Date.now();
-				pq.studentData[id].discCount = tools.objGet(pq.studentData[id], ['discCount'], 0) + 1;
+				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") disconnected from " + clientIP);
+				if(pq.studentData[id].mark === undefined) {
+					pq.studentData[id].disctime = Date.now();
+					pq.studentData[id].discCount = tools.objGet(pq.studentData[id], ['discCount'], 0) + 1;
+				}
 				delete pq.studentData[id].client;
 			}
 			delete pq.ioStudents[clientUid];
@@ -120,6 +122,8 @@ function loadIo() {
 		client.on('blur', function() {
 			if(pq.studentIpPool.hasOwnProperty(clientIP)) {
 				var id = pq.studentIpPool[clientIP];
+				if(pq.studentData[id].mark !== undefined)
+					return;
 				pq.studentData[id].blurtime = Date.now();
 				pq.studentData[id].blurCount = tools.objGet(pq.studentData[id], ['blurCount'], 0) + 1;
 				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") went away");
@@ -129,6 +133,8 @@ function loadIo() {
 		client.on('focus', function() {
 			if(pq.studentIpPool.hasOwnProperty(clientIP)) {
 				var id = pq.studentIpPool[clientIP];
+				if(pq.studentData[id].mark !== undefined)
+					return;
 				var blurDur = (Date.now() - pq.studentData[id].blurtime) / 1000;
 				pq.studentData[id].blurTotal = tools.objGet(pq.studentData[id], ['blurTotal'], 0) + blurDur;
 				blurDur = blurDur.toFixed(1);
@@ -149,10 +155,12 @@ function loadIo() {
 				return;
 			}
 			
-			var discDur = (Date.now() - pq.studentData[id].disctime) / 1000;
-			pq.studentData[id].discTotal = tools.objGet(pq.studentData[id], ['discTotal'], 0) + discDur;
-			discDur = discDur.toFixed(1);
-			pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") reconnected from " + clientIP + " " + discDur + " seconds later");
+			if(pq.studentData[id].mark === undefined) {
+				var discDur = (Date.now() - pq.studentData[id].disctime) / 1000;
+				pq.studentData[id].discTotal = tools.objGet(pq.studentData[id], ['discTotal'], 0) + discDur;
+				discDur = discDur.toFixed(1);
+				pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") reconnected from " + clientIP + " " + discDur + " seconds later");
+			}
 			
 			pq.ioStudents[clientUid] = id;
 			pq.studentData[id].client = client;
