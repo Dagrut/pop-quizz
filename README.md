@@ -34,7 +34,7 @@ node pop-quizz.js -q ./some/quizz/file.js -s ./a/students/list -d ./output/data/
 Here are the available options of `pop-quizz` :
 
 - `-q` *MANDATORY* Specify the quizz file.
-- `-s` *MANDATORY* Specify the studends list file.
+- `-s` *MANDATORY* Specify the students list file.
 - `-d` *MANDATORY* Specify the data directory output (will contain saved state, logs, and also a summary file).
 - `-p` *OPTIONNAL* Specify the http listen port. Defaults to 8080.
 - `-r` *OPTIONNAL* Run the quizz instantly, don't wait. You will not need to type `run` after starting. Mainly for testing.

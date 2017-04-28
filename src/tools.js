@@ -125,6 +125,21 @@ tools.secondsToMMSS = function(dur) {
 	return(tools.padString((dur / 60) | 0, 2, '0') + ':' + tools.padString(dur % 60, 2, '0'));
 };
 
+tools.randomString = function(length, allowedChars) {
+	var ret = '';
+	
+	for(var i = 0 ; i < length ; i++) {
+		var c = (Math.random() * 256) | 0;
+		c = String.fromCharCode(c);
+		if(c.match(allowedChars))
+			ret += c;
+		else
+			i--;
+	}
+	
+	return(ret);
+};
+
 tools.tableFormatter = function tableFormatter() {
 	if(!(this instanceof tableFormatter))
 		return(new tableFormatter());

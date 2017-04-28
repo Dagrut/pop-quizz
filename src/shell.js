@@ -55,8 +55,8 @@ function loadShell() {
 	cmds.start = cmds.run = cmds.r = cmds.go = function() {
 		if(pq.state == pq.STATES.idle) {
 			pq.state = pq.STATES.quizz;
-			pq.io.emit('init', pq.opts.students, pq.opts.pubQuizz);
-			pq.io.emit('showList');
+			pq.io.in('student').emit('init', pq.opts.students, pq.opts.pubQuizz);
+			pq.io.in('student').emit('showList');
 			console.log('Quizz started!');
 			resetPrompt();
 		}
@@ -161,8 +161,8 @@ function loadShell() {
 					delete pq.studentData[id].start;
 					delete pq.studentData[id].form;
 					delete pq.studentData[id].mark;
-					delete pq.studentData[id].blurtime;
-					delete pq.studentData[id].disctime;
+					delete pq.studentData[id].blurTime;
+					delete pq.studentData[id].discTime;
 					delete pq.studentData[id].blurTotal;
 					delete pq.studentData[id].discTotal;
 					delete pq.studentData[id].blurCount;

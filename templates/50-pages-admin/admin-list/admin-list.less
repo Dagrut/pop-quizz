@@ -1,0 +1,41 @@
+#admin-list {
+	height: 100vh;
+	width: 100vw;
+	overflow: auto;
+	padding: 15px 15px;
+	
+	> table {
+		border: 1px solid black;
+		border-collapse: collapse;
+		
+		td, th {
+			border: 1px solid black;
+			padding: 2px 4px;
+		}
+		
+		td.question-unchecked {
+			color: grey;
+			> :not(.question-unchecked) { display: none; }
+		}
+		
+		td.question-good {
+			color: green;
+			> :not(.question-good) { display: none; }
+		}
+		
+		td.question-bad {
+			color: red;
+			> :not(.question-bad) { display: none; }
+		}
+		
+		td.student-disconnected {
+			color: grey;
+			> :not(.student-disconnected) { display: none; }
+		}
+		
+		td.student-connected {
+			color: green;
+			> :not(.student-connected) { display: none; }
+		}
+	}
+}

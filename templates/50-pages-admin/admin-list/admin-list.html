@@ -1,0 +1,39 @@
+<script id="admin-list-tpl" data-target="#pages-root" class="tpl-script" type="text/x-handlebars-template">
+	<div id="admin-list">
+		<table>
+			<thead>
+				<tr>
+					<th>Étudiant</th>
+					<th>Connecté</th>
+					<th>Absences</th>
+					<th>Déconnexions</th>
+					<th>Note</th>
+					{{#each quizz.questions}}
+						<th>Q{{@index}}</th>
+					{{/each}}
+				</tr>
+			</thead>
+			<tbody>
+			{{#each students}}
+				<tr class="tr-s{{@index}}">
+					<td>{{this}}</td>
+					<td class="td-s{{@index}}connected student-disconnected">
+						<span class="student-disconnected fa fa-times-circle-o" aria-hidden="true"></span>
+						<span class="student-connected fa fa-check-circle-o" aria-hidden="true"></span>
+					</td>
+					<td class="td-s{{@index}}blurCount">0 fois, 00:00</td>
+					<td class="td-s{{@index}}discCount">0 fois, 00:00</td>
+					<td class="td-s{{@index}}mark student-mark">0</td>
+					{{#each ../quizz.questions}}
+						<td class="td-s{{@../index}}q{{@index}} question-unchecked">
+							<span class="question-unchecked fa fa-circle-o" aria-hidden="true"></span>
+							<span class="question-good fa fa-check-circle-o" aria-hidden="true"></span>
+							<span class="question-bad fa fa-times-circle-o" aria-hidden="true"></span>
+						</td>
+					{{/each}}
+				</tr>
+			{{/each}}
+			<tbody>
+		</table>
+	</div>
+</script>

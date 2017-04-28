@@ -1,0 +1,3 @@
+tplEvents['admin-list'] = function() {
+	
+};
