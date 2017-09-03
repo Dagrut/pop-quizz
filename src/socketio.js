@@ -6,10 +6,10 @@ const events = require('events');
 const tools = require('./tools.js');
 
 function loadIo() {
-	/* Hash studentID => quizz mark + form data backup + quizz start time + socketIO client + IP address */
+	/* Hash studentID => quizz mark + form data backup + quizz start time + socketIO client + IP address + session token */
 	pq.studentData = {};
-	/* Hash IP address => student ID */
-	pq.studentIpPool = {};
+	/* Hash session token => student ID */
+	pq.studentSessPool = {};
 	/* Hash socketIO client ID => student ID */
 	pq.ioStudents = {};
 	pq.adminAccessUrl = '/' + tools.randomString(51, /[a-zA-Z0-9]/);
@@ -21,11 +21,11 @@ function loadIo() {
 		
 		pq.log.ioconn("Connection from " + clientIP);
 		
-		client.on('ready', function(url) {
+		client.on('ready', function(url, session) {
 			if(url == pq.adminAccessUrl)
-				socketioAdmin(client);
+				socketioAdmin(client, session);
 			else
-				socketioStudent(client);
+				socketioStudent(client, session);
 		});
 	});
 	

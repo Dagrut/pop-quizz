@@ -32,8 +32,10 @@ function onStudent(socket) {
 		});
 	});
 	
-	socket.on('youare', function(userId, discTime) {
+	socket.on('youare', function(userId, discTime, session) {
 		currentStudent = userId;
+		
+		setCookie('popquizz', session);
 		
 		if(discTime > 0) {
 			var strDiscTime = '**' + discTime + '**';
@@ -52,6 +54,12 @@ function onStudent(socket) {
 		renderTemplate('student-taken', {
 			student: students[uid],
 		});
+	});
+	
+	socket.on('student-try-reco', function(uid) {
+		setTimeout(function() {
+			socket.emit('iam', uid);
+		}, 500);
 	});
 	
 	socket.on('quizz-extend', function(duration) {

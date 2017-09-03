@@ -172,9 +172,9 @@ function loadShell() {
 						pq.studentData[id].client.disconnect();
 				}
 				
-				for(var i in pq.studentIpPool) {
-					if(pq.studentIpPool[i] == id)
-						delete pq.studentIpPool[i];
+				for(var i in pq.studentSessPool) {
+					if(pq.studentSessPool[i] == id)
+						delete pq.studentSessPool[i];
 				}
 				
 				console.log('Student ' + studName + ' (' + id + ') reset');

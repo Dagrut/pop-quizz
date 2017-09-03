@@ -102,3 +102,26 @@ function arrayGrpShuffle(arr, toShuffle, toShuffleDefault) {
 	
 	return(ret);
 }
+
+function setCookie(key, val, days) {
+	if(!days)
+		days = 30;
+	var d = new Date();
+	d.setTime(d.getTime() + (days*24*60*60*1000));
+	var expires = "expires="+ d.toUTCString();
+	document.cookie = key + "=" + val + ";" + expires + ";path=/";
+}
+
+function getCookie(getKey) {
+	var ckarr = document.cookie.split(/\s;\s/);
+	
+	for(var i = 0 ; i < ckarr.length ; i++) {
+		var eqid = ckarr[i].split('=');
+		var key = decodeURIComponent(ckarr[i].substring(0, eqid));
+		var vak = decodeURIComponent(ckarr[i].substring(eqid+1));
+		if(key == getKey)
+			return(val);
+	}
+	
+	return(null);
+}

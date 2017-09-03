@@ -15,7 +15,7 @@ $(function() {
 	
 	socket = io();
 	
-	socket.emit('ready', document.location.pathname);
+	socket.emit('ready', document.location.pathname, getCookie('popquizz'));
 	
 	socket.on('init', function(students_, quizz_) {
 		students = students_;

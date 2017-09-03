@@ -1,6 +1,6 @@
 var tools = require('./tools.js');
 
-function onStudent(client) {
+function onStudent(client, session) {
 	var clientUid = client.id;
 	var clientIP = tools.objGet(client, 'handshake.address', 'NOIP');
 	
@@ -41,29 +41,38 @@ function onStudent(client) {
 			return;
 		}
 		
-		if(pq.studentIpPool[clientIP] !== undefined)
-			id = pq.studentIpPool[clientIP];
+		if(pq.studentSessPool[session] !== undefined)
+			id = pq.studentSessPool[session];
 		
 		if(!pq.studentData.hasOwnProperty(id))
 			pq.studentData[id] = tools.objGet(pq.savedState, ['studentData', id], {});
 		
 		if(tools.objGet(pq.studentData, [id, 'client'])) {
-			client.emit('student-taken', id);
+			if(pq.studentData[id].session == session) {
+				pq.studentData[id].client.emit('showList');
+				pq.studentData[id].client.disconnect();
+				client.emit('student-try-reco', id);
+			}
+			else {
+				client.emit('student-taken', id);
+			}
 			return;
 		}
 		
-		pq.studentIpPool[clientIP] = id;
+		pq.studentSessPool[session] = id;
 		pq.ioStudents[clientUid] = id;
 		
 		if(!pq.studentData[id].start)
 			pq.studentData[id].start = Date.now();
 		
+		session = tools.randomString(31, /[a-zA-Z0-9]/);
+		pq.studentData[id].session = session;
 		pq.studentData[id].ip = clientIP;
 		pq.studentData[id].client = client;
 		
 		pq.log.studLogs("Student " + pq.opts.students[id] + " (" + id + ") connected from " + clientIP);
 		
-		client.emit('youare', id);
+		client.emit('youare', id, session);
 		
 		if(pq.state == pq.STATES.solve) {
 			tools.computeStudentMark(id);
@@ -135,8 +144,8 @@ function onStudent(client) {
 	});
 	
 	client.on('blur', function() {
-		if(pq.studentIpPool.hasOwnProperty(clientIP)) {
-			var id = pq.studentIpPool[clientIP];
+		if(pq.studentSessPool.hasOwnProperty(session)) {
+			var id = pq.studentSessPool[session];
 			if(pq.studentData[id].mark !== undefined)
 				return;
 			pq.studentData[id].blurTime = Date.now();
@@ -152,8 +161,8 @@ function onStudent(client) {
 	});
 	
 	client.on('focus', function() {
-		if(pq.studentIpPool.hasOwnProperty(clientIP)) {
-			var id = pq.studentIpPool[clientIP];
+		if(pq.studentSessPool.hasOwnProperty(session)) {
+			var id = pq.studentSessPool[session];
 			if(pq.studentData[id].mark !== undefined)
 				return;
 			var blurDur = (Date.now() - pq.studentData[id].blurTime) / 1000;
@@ -174,8 +183,8 @@ function onStudent(client) {
 	
 	client.emit('init', pq.opts.students, pq.opts.pubQuizz);
 	
-	if(pq.studentIpPool.hasOwnProperty(clientIP)) {
-		var id = pq.studentIpPool[clientIP];
+	if(pq.studentSessPool.hasOwnProperty(session)) {
+		var id = pq.studentSessPool[session];
 		
 		if(tools.objGet(pq.studentData, [id, "client"])) {
 			client.emit('student-taken', id);

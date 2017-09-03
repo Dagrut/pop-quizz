@@ -1,6 +1,6 @@
 var tools = require('./tools.js');
 
-function onAdmin(client) {
+function onAdmin(client, session) {
 	client.join('admin');
 	
 	client.emit('admin', pq.opts.students, pq.opts.quizz);
