@@ -55,8 +55,8 @@ function loadShell() {
 	cmds.start = cmds.run = cmds.r = cmds.go = function() {
 		if(pq.state == pq.STATES.idle) {
 			pq.state = pq.STATES.quizz;
-			pq.io.in('student').emit('init', pq.opts.students, pq.opts.pubQuizz);
-			pq.io.in('student').emit('showList');
+			pq.io.in('students').emit('init', pq.opts.students, pq.opts.pubQuizz);
+			pq.io.in('students').emit('showList');
 			console.log('Quizz started!');
 			resetPrompt();
 		}
