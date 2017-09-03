@@ -85,6 +85,9 @@ function fillQuizz(quizz) {
 	if(isNaN(quizz.duration) || quizz.duration <= 0)
 		quizz.duration = 60;
 	
+	if(!quizz.notationMode)
+		quizz.notationMode = 'allgoodhalf';
+	
 	quizz.duration = (quizz.duration * 60 * 1000) | 0;
 	
 	if(!quizz.hasOwnProperty("qshuffle"))

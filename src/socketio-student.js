@@ -59,13 +59,13 @@ function onStudent(client, session) {
 			return;
 		}
 		
+		session = tools.randomString(31, /[a-zA-Z0-9]/);
 		pq.studentSessPool[session] = id;
 		pq.ioStudents[clientUid] = id;
 		
 		if(!pq.studentData[id].start)
 			pq.studentData[id].start = Date.now();
 		
-		session = tools.randomString(31, /[a-zA-Z0-9]/);
 		pq.studentData[id].session = session;
 		pq.studentData[id].ip = clientIP;
 		pq.studentData[id].client = client;

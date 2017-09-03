@@ -76,17 +76,50 @@ tools.computeStudentMark = function computeStudentMark(id) {
 	for(var i = 0 ; i < quizzq.length ; i++) {
 		var curq = quizzq[i];
 		var good = 0;
+		var okCount = 0;
+		var notOkCount = 0;
+		var studentGoods = 0;
+		var studentBads = 0;
 		
 		for(var j = 0 ; j < curq.choices.length ; j++) {
-			if(curq.choices[j].ok == tools.objGet(studentResponses, ['q' + i, 'q' + i + 'c' + j], false)) {
+			var studResp = tools.objGet(studentResponses, ['q' + i, 'q' + i + 'c' + j], false);
+			
+			if(curq.choices[j].ok)
+				okCount++;
+			else
+				notOkCount++;
+			
+			if(curq.choices[j].ok == studResp) {
 				good++;
+				if(curq.choices[j].ok)
+					studentGoods++;
+			}
+			else {
+				if(!curq.choices[j].ok)
+					studentBads++;
 			}
 		}
 		
 		var weight = curq.points || 1;
+		
+		if(pq.opts.quizz.notationMode == 'allgoodhalf') {
+			if(curq.choices.length == good)
+				points += weight;
+			else if(studentBads == 0 && studentGoods > 0 && studentGoods < okCount)
+				points += weight / 2;
+		}
+		if(pq.opts.quizz.notationMode == 'proportionnal') {
+			if(curq.choices.length == good)
+				points += weight;
+			else if(studentBads == 0 && studentGoods > 0 && studentGoods < okCount)
+				points += weight * (studentGoods / okCount);
+		}
+		else { // allgood
+			if(curq.choices.length == good)
+				points += weight;
+		}
+		
 		totalPoints += weight;
-		if(curq.choices.length == good)
-			points += weight;
 	}
 	
 	var mark = points / totalPoints;

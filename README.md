@@ -72,7 +72,7 @@ Every important action is logged, so you may know who is doing what (like when s
 
 The marks are also written in the log files, side by side with the remaining time for the quizz, when they submitted it. Also if a student reach the time limit, the quizz will be automatically submitted for him.
 
-When a student checks all good responses and doesn't check the other ones, he gets one point. If he doesn't, he gets 0 for this question.
+For the question notation mode, see the `notationMode` variable within the `quizz1.js` example file.
 
 When you quit the program, it will do two things (that are also done periodically each 10 seconds) : It will save the current state (each student state, mark, start time, and so on), and also write a **summary.txt** file containing these details in a human readable format. You can check this file whenever you want.
 Note that the content of this file may NOT be the same as the `list` command output, since this command only list the current students state, not the previous ones (that were restored from a past session).

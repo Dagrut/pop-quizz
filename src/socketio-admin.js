@@ -5,14 +5,8 @@ function onAdmin(client, session) {
 	
 	client.emit('admin', pq.opts.students, pq.opts.quizz);
 	
-	function handleEvents(evts) {
-		client.emit('adminPush', evts);
-	}
-	
-	pq.evts.on('adminPush', handleEvents);
-	
 	client.on('disconnect', function() {
-		pq.evts.removeListener('adminPush', handleEvents);
+		
 	});
 	
 	var data = tools.objGet(pq.savedState, 'studentData', {});

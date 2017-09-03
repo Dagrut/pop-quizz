@@ -20,6 +20,15 @@ exp.gshuffle = {
 	qelecU: true,
 };
 
+/*
+The notation mode may be :
+- allgood : All good questons (and only them) have to be checked to have one point, else zero
+- allgoodhalf : Same, but if not all good questions are checked, the student still have 0.5
+- proportionnal : If the students has 1/3 of the good responses, he will have 1/3 of the points. A bad response still gives 0.
+The default is allgoodhalf (sorry, this was not the previous behavior, but I had no way of doing it an other way)
+*/
+exp.notationMode = 'allgood';
+
 exp.questions = [
 	{
 		title: "Is this question using `<html>` characters?",

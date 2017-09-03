@@ -36,7 +36,7 @@ function loadIo() {
 	
 	setInterval(function() {
 		if(evtsPool.length > 0) {
-			pq.evts.emit('adminPush', evtsPool);
+			pq.io.in('admin').emit('adminPush', evtsPool);
 			evtsPool = [];
 			evtsHash = {};
 		}
