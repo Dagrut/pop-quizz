@@ -26,9 +26,10 @@
 					<td class="td-s{{@index}}mark student-mark">0</td>
 					{{#each ../quizz.questions}}
 						<td class="td-s{{@../index}}q{{@index}} question-unchecked">
-							<span class="question-unchecked fa fa-circle-o" aria-hidden="true"></span>
-							<span class="question-good fa fa-check-circle-o" aria-hidden="true"></span>
-							<span class="question-bad fa fa-times-circle-o" aria-hidden="true"></span>
+							<span class="question-unchecked fa fa-circle" aria-hidden="true"></span>
+							<span class="question-good fa fa-check-circle" aria-hidden="true"></span>
+							<span class="question-partial fa fa-minus-circle" aria-hidden="true"></span>
+							<span class="question-bad fa fa-times-circle" aria-hidden="true"></span>
 						</td>
 					{{/each}}
 				</tr>

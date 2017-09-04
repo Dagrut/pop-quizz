@@ -4,42 +4,90 @@ function onAdmin(socket) {
 		quizz: quizz,
 	});
 	
-	function applyFormTo(student, form) {
-		var mark = 0;
-		var markTotal = 0;
+	function computeNoteAndDisplay(student, studentResponses) {
+		var quizzq = quizz.questions;
+		var points = 0;
+		var totalPoints = 0;
 		
-		for(var i = 0 ; i < quizz.questions.length ; i++) {
-			var q = quizz.questions[i];
-			var goodq = true;
+		for(var i = 0 ; i < quizzq.length ; i++) {
+			var curq = quizzq[i];
 			var tdNode = $('td.td-s'+student+'q'+i);
-			var anyChecked = false;
-			markTotal += q.points || 1;
+			var setClass = '';
+			var good = 0;
+			var okCount = 0;
+			var notOkCount = 0;
+			var studentGoods = 0;
+			var studentBads = 0;
+			var atLeastOneResp = false;
 			
-			for(var j = 0 ; j < q.choices.length ; j++) {
-				var c = q.choices[j];
-				var resp = objGet(form, ['q'+i, 'q'+i+'c'+j], null);
-				if(resp !== null)
-					anyChecked = true;
+			for(var j = 0 ; j < curq.choices.length ; j++) {
+				var studResp = objGet(studentResponses, ['q' + i, 'q' + i + 'c' + j], false);
+				
+				atLeastOneResp = !!(atLeastOneResp || studResp);
+				if(curq.choices[j].ok)
+					okCount++;
 				else
-					resp = false;
-				if(c.ok != resp)
-					goodq = false;
+					notOkCount++;
+				
+				if(curq.choices[j].ok == studResp) {
+					good++;
+					if(curq.choices[j].ok)
+						studentGoods++;
+				}
+				else {
+					if(!curq.choices[j].ok)
+						studentBads++;
+				}
 			}
 			
-			if(goodq)
-				mark += q.points || 1;
+			var weight = curq.points || 1;
+			totalPoints += weight;
 			
-			tdNode.removeClass('question-unchecked question-good question-bad');
-			if(!anyChecked)
-				tdNode.addClass('question-unchecked');
-			else if(goodq)
-				tdNode.addClass('question-good');
-			else
-				tdNode.addClass('question-bad');
+			if(quizz.notationMode == 'allgoodhalf') {
+				if(curq.choices.length == good) {
+					points += weight;
+					setClass = 'question-good';
+				}
+				else if(studentBads == 0 && studentGoods > 0 && studentGoods < okCount) {
+					points += weight / 2;
+					setClass = 'question-partial';
+				}
+				else {
+					setClass = 'question-bad';
+				}
+			}
+			else if(quizz.notationMode == 'proportionnal') {
+				if(curq.choices.length == good) {
+					points += weight;
+					setClass = 'question-good';
+				}
+				else if(studentBads == 0 && studentGoods > 0 && studentGoods < okCount) {
+					points += weight * (studentGoods / okCount);
+					setClass = 'question-partial';
+				}
+				else {
+					setClass = 'question-bad';
+				}
+			}
+			else { // allgood
+				if(curq.choices.length == good) {
+					points += weight;
+					setClass = 'question-good';
+				}
+				else {
+					setClass = 'question-bad';
+				}
+			}
+			
+			if(!atLeastOneResp)
+				setClass = 'question-unchecked';
+			
+			tdNode.removeClass('question-unchecked question-good question-bad question-partial');
+			tdNode.addClass(setClass);
 		}
 		
 		tdNode = $('td.td-s'+student+'mark');
-		mark = mark * quizz.markBase / markTotal;
+		mark = points * quizz.markBase / totalPoints;
 		mark *= 10;
 		mark |= 0;
 		mark /= 10;
@@ -73,7 +121,7 @@ function onAdmin(socket) {
 			
 			if(qIs(evt, 'studentSave')) {
 				var form = objGet(evt, 'data.form', {});
-				applyFormTo(evt.who, form);
+				computeNoteAndDisplay(evt.who, form);
 			}
 			if(qIs(evt, 'studentConnect', 'studentDisconnect')) {
 				var tdNode = $('td.td-s'+evt.who+'connected');

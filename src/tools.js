@@ -108,7 +108,7 @@ tools.computeStudentMark = function computeStudentMark(id) {
 			else if(studentBads == 0 && studentGoods > 0 && studentGoods < okCount)
 				points += weight / 2;
 		}
-		if(pq.opts.quizz.notationMode == 'proportionnal') {
+		else if(pq.opts.quizz.notationMode == 'proportionnal') {
 			if(curq.choices.length == good)
 				points += weight;
 			else if(studentBads == 0 && studentGoods > 0 && studentGoods < okCount)
